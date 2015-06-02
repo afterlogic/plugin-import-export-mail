@@ -1,0 +1,16 @@
+<div class="mask" data-bind="click: onLaterClick"></div>
+<div class="popup_panel">
+	<span class="close" data-bind="click: onLaterClick"></span>
+	<span class="title" data-i18n="PLUGIN_TRANSFER_MAIL/HEADER" data-bind="i18n: 'text'"></span>
+	<a href="FolderTransferInfoPopup.html"></a>
+	<div class="fields">
+		<div class="row">
+			<span class="hint" data-i18n="PLUGIN_TRANSFER_MAIL/GENERATE_SUCCESS_DESCRIPTION" data-bind="i18n: 'html'"></span>
+		</div>
+		<div class="buttons">
+			<span class="button" data-bind="text: downloadButtonText, click: onDownloadClick"></span>
+			<span class="button cancel secondary" data-i18n="Later" data-bind="i18n: 'text', click: onLaterClick"></span>
+		</div>
+	</div>
+</div>
+<span class="helper"></span>	

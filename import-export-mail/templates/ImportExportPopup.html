@@ -1,0 +1,26 @@
+<div class="mask" data-bind="click: onCancelClick"></div>
+<div class="popup_panel">
+	<span class="close" data-bind="click: onCancelClick"></span>
+	<span class="title" data-i18n="PLUGIN_TRANSFER_MAIL/HEADER" data-bind="i18n: 'text'"></span>
+	
+	<div class="fields">
+		<div class="row">
+			<span class="hint" data-i18n="PLUGIN_TRANSFER_MAIL/DESCRIPTION" data-bind="i18n: 'html'"></span>
+		</div>
+		<div class="row">
+			<span class="label" data-i18n="PLUGIN_TRANSFER_MAIL/FOLDER" data-bind="i18n: 'text'"></span>
+			<select class="value input" data-bind="value: folder, options: options,
+				optionsText: 'translatedDisplayName', optionsValue: 'fullName', 
+				valueUpdate: ['blur', 'afterkeydown'], disable: status() != '' && status() != 'ready'">
+			</select>
+		</div>
+		<div class="buttons">
+			<span class="button" data-bind="css: {'disabled': processing()}, initDom: uploaderButton">
+				<span data-bind="text: importButtonText"></span>
+			</span>
+			<span class="button" style="overflow: hidden" data-bind="css: {'disabled': processing()}, text: exportButtonText, click: onExportClick"></span>
+			<span class="button cancel secondary" style="overflow: hidden" data-i18n="Close" data-bind="i18n: 'text', click: onCancelClick"></span>
+		</div>
+	</div>
+</div>
+<span class="helper"></span>	
