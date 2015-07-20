@@ -131,7 +131,7 @@ class CImportExportMailPlugin extends AApiPlugin
 
 		$iAccountId = (int) isset($sAccountId) ? $sAccountId : 0;
 
-		$oDefAccount = $oApiIntegrator->GetLogginedDefaultAccount();
+		$oDefAccount = $oApiIntegrator->getLogginedDefaultAccount();
 		$oAccount = $oApiUsers->getAccountById($iAccountId);
 		if ($oDefAccount)
 		{
@@ -147,7 +147,7 @@ class CImportExportMailPlugin extends AApiPlugin
 	}
 	
 	/**
-	 * @param \ProjectCore\Actions $oServer
+	 * @param \Core\Actions $oServer
 	 * @return type
 	 */
 	public function AjaxExportMailStatus($oServer)
@@ -161,10 +161,10 @@ class CImportExportMailPlugin extends AApiPlugin
 			{
 				$sZipName = $oServer->getParamValue('Zip', null);
 				$oDefAccount = $oServer->GetDefaultAccount();
-				if ($this->oApiFileCacheManager()->FileExists($oDefAccount, $sZipName, '.info'))
+				if ($this->oApiFileCacheManager()->isFileExists($oDefAccount, $sZipName, '.info'))
 				{
 					$mResult['Result'] = array(
-						'Status' => $this->oApiFileCacheManager()->Get($oDefAccount, $sZipName, '.info')
+						'Status' => $this->oApiFileCacheManager()->get($oDefAccount, $sZipName, '.info')
 					);
 				}
 			}
@@ -178,7 +178,7 @@ class CImportExportMailPlugin extends AApiPlugin
 	}
 
 	/**
-	 * @param \ProjectCore\Actions $oServer
+	 * @param \Core\Actions $oServer
 	 * @return type
 	 */
 	public function AjaxExportMailPrepare($oServer)
@@ -195,8 +195,8 @@ class CImportExportMailPlugin extends AApiPlugin
 					'Zip' => $sZipName, 
 				);
 
-				$this->oApiFileCacheManager()->Put($oDefAccount, $sZipName, '', '.zip');
-				$this->oApiFileCacheManager()->Put($oDefAccount, $sZipName, 'prepare', '.info');
+				$this->oApiFileCacheManager()->put($oDefAccount, $sZipName, '', '.zip');
+				$this->oApiFileCacheManager()->put($oDefAccount, $sZipName, 'prepare', '.info');
 			}
 		}
 		catch (Exception $oEx)
@@ -220,7 +220,7 @@ class CImportExportMailPlugin extends AApiPlugin
 			$aTempFiles = array();
 
 			$sFolder = $oServer->getParamValue('Folder', null);
-			$this->oApiFileCacheManager()->Put($oDefAccount, $sZipName, 'generate', '.info');
+			$this->oApiFileCacheManager()->put($oDefAccount, $sZipName, 'generate', '.info');
 
 			/* @var $oApiUsers \CApiUsersManager */
 			$oApiUsers = $this->oApiUsersManager();
@@ -235,7 +235,7 @@ class CImportExportMailPlugin extends AApiPlugin
 				$iOffset = 0;
 				$iLimit = 20;
 
-				$sZipFilePath = $this->oApiFileCacheManager()->GenerateFullFilePath($oDefAccount, $sZipName, '.zip');
+				$sZipFilePath = $this->oApiFileCacheManager()->generateFullFilePath($oDefAccount, $sZipName, '.zip');
 				$rZipResource = fopen($sZipFilePath, 'w+b');
 
 				$oZip = new \ZipStream\ZipStream(null, array(\ZipStream\ZipStream::OPTION_OUTPUT_STREAM => $rZipResource));
@@ -258,9 +258,9 @@ class CImportExportMailPlugin extends AApiPlugin
 								$sTempName = \md5(\time().\rand(1000, 9999).$sFileName);
 								$aTempFiles[] = $sTempName;
 
-								if (is_resource($rResource) && $self->oApiFileCacheManager()->PutFile($oDefAccount, $sTempName, $rResource))
+								if (is_resource($rResource) && $self->oApiFileCacheManager()->putFile($oDefAccount, $sTempName, $rResource))
 								{
-									$sFilePath = $self->oApiFileCacheManager()->GenerateFullFilePath($oDefAccount, $sTempName);
+									$sFilePath = $self->oApiFileCacheManager()->generateFullFilePath($oDefAccount, $sTempName);
 									$rSubResource = fopen($sFilePath, 'rb');
 									if (is_resource($rSubResource))
 									{
@@ -282,26 +282,26 @@ class CImportExportMailPlugin extends AApiPlugin
 				foreach ($aTempFiles as $sTempName)
 				{
 					$this->Log('Remove temp file: ' . $sTempName);
-					$self->oApiFileCacheManager()->Clear($oDefAccount, $sTempName);				
+					$self->oApiFileCacheManager()->clear($oDefAccount, $sTempName);				
 				}
 			}
 			$this->Log('Generating ZIP Result: ');
 			$this->Log($mResult, false, true);
-			$this->oApiFileCacheManager()->Put($oDefAccount, $sZipName, 'ready', '.info');
+			$this->oApiFileCacheManager()->put($oDefAccount, $sZipName, 'ready', '.info');
 		}
 		catch (Exception $oEx)
 		{
-			$this->oApiFileCacheManager()->Put($oDefAccount, $sZipName, 'error', '.info');
+			$this->oApiFileCacheManager()->put($oDefAccount, $sZipName, 'error', '.info');
 			$this->Log($oEx, true);
 		}
 	}	
 	
 	public function ExportMail($oDefAccount, $sZipFile)
 	{
-		$this->oApiFileCacheManager()->Put($oDefAccount, $sZipFile, 'download', '.info');
+		$this->oApiFileCacheManager()->put($oDefAccount, $sZipFile, 'download', '.info');
 		$this->Log('Start downloading ZIP file.. ');
 
-		$sZipFilePath = $this->oApiFileCacheManager()->GenerateFullFilePath($oDefAccount, $sZipFile, '.zip');
+		$sZipFilePath = $this->oApiFileCacheManager()->generateFullFilePath($oDefAccount, $sZipFile, '.zip');
 		$iFileSize = filesize($sZipFilePath);
 		$this->Log('ZIP file size: ' . $iFileSize);
 		
@@ -369,9 +369,9 @@ class CImportExportMailPlugin extends AApiPlugin
 						if ($bIsZipExtension) 
 						{
 							$sSavedName = 'upload-post-' . md5($aFileData['name'] . $aFileData['tmp_name']);
-							if ($this->oApiFileCacheManager()->MoveUploadedFile($oDefAccount, $sSavedName, $aFileData['tmp_name'])) 
+							if ($this->oApiFileCacheManager()->moveUploadedFile($oDefAccount, $sSavedName, $aFileData['tmp_name'])) 
 							{
-								$sSavedFullName = $this->oApiFileCacheManager()->GenerateFullFilePath($oDefAccount, $sSavedName);
+								$sSavedFullName = $this->oApiFileCacheManager()->generateFullFilePath($oDefAccount, $sSavedName);
 
 								/* @var $oApiMail \CApiMailManager */
 								$oApiMail = $this->oApiMailManager();
