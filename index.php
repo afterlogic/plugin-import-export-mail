@@ -108,7 +108,7 @@ class CImportExportMailPlugin extends AApiPlugin
 	/* 
 	 * @return \CApiFilecacheManager
 	 */
-	private function oApiFileCacheManager()
+	public function oApiFileCacheManager()
 	{
 		static $oApiFileCache = null;
 		if (null === $oApiFileCache)
@@ -265,10 +265,10 @@ class CImportExportMailPlugin extends AApiPlugin
 									if (is_resource($rSubResource))
 									{
 										$sFileName = 'uid-' . $iUid . '.eml';
-										$this->Log('Append file \'' . $sFileName . '\' to ZIP');
+										$self->Log('Append file \'' . $sFileName . '\' to ZIP');
 										$oZip->addFileFromStream($sFileName, $rSubResource);
 										$MemoryUsage = memory_get_usage(true)/(1024*1024);
-										$this->Log('Memory usage: ' . $MemoryUsage);
+										$self->Log('Memory usage: ' . $MemoryUsage);
 										@fclose($rSubResource);
 									}
 								}
