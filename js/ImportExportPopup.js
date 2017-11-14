@@ -179,7 +179,7 @@ ImportExportPopup.prototype.initUploader = function ()
 	if (this.uploaderButton() && this.oJua === null)
 	{
 		this.oJua = new Jua({
-			'action': '?/transfer-mail/import/' + this.folder() + '/' + oAccountData.Id,
+			'action': '?/transfer-mail/import/' + encodeURIComponent(this.folder()) + '/' + oAccountData.Id,
 			'name': 'jua-uploader',
 			'queueSize': 1,
 			'clickElement': this.uploaderButton(),
@@ -211,7 +211,7 @@ ImportExportPopup.prototype.onFileUploadSelect = function (sFileUid, oFileData)
 		return false;
 	}	
 			
-	this.oJua.setOption('action', '?/transfer-mail/import/' + sFolder + '/' + oAccountData.Id);
+	this.oJua.setOption('action', '?/transfer-mail/import/' + encodeURIComponent(sFolder) + '/' + oAccountData.Id);
 };
 
 ImportExportPopup.prototype.onFileUploadStart = function ()

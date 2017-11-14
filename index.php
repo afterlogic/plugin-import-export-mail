@@ -356,6 +356,7 @@ class CImportExportMailPlugin extends AApiPlugin
 	public function ImportMail($oDefAccount, $oAccount, $sFolder)
 	{
 		@ob_start();
+		$sFolder = urldecode($sFolder);
 		$aResponseItem = array();
 		try
 		{
